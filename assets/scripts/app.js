@@ -1,4 +1,4 @@
-class product {
+class Product {
   title = "DEFAULT";
   imageUrl = "images/noImage.jpeg";
   price = "";
@@ -35,9 +35,9 @@ class ProductItem {
 
 class ProductList {
   products = [
-    new product("a pillow", "/images/pillow.jpeg", 300, "a soft pillow"), //create object with class
-    new product("a car", "/images/car.jpeg", 3500, "a nice car"),
-    new product("a carpet", "/images/carpet.jpeg", 605, "a clean carpet"),
+    new Product("a pillow", "/images/pillow.jpeg", 300, "a soft pillow"), //create object with class
+    new Product("a car", "/images/car.jpeg", 3500, "a nice car"),
+    new Product("a carpet", "/images/carpet.jpeg", 605, "a clean carpet"),
   ];
   constructor() {}
   render() {
