@@ -16,7 +16,13 @@ class ProductItem {
   constructor(product) {
     this.product = product;
   }
-  render() {
+
+  addCartHandler() {
+    console.log("adding product");
+    console.log(this.product);
+  }
+
+  renderItem() {
     const prodEl = document.createElement("li");
     prodEl.className = "product-item";
     prodEl.innerHTML = `
@@ -29,6 +35,8 @@ class ProductItem {
                 <button>Add to shopping cart</button>
             </div>
         </div>`;
+    const addCartButton = prodEl.querySelector("button");
+    addCartButton.addEventListener("click", this.addCartHandler.bind(this));
     return prodEl;
   }
 }
@@ -41,17 +49,43 @@ class ProductList {
   ];
   constructor() {}
   render() {
-    const renderHook = document.getElementById("app");
     const prodList = document.createElement("ul");
     prodList.className = "product-list";
     for (const prod of this.products) {
       const productItem = new ProductItem(prod);
-      const prodEl = productItem.render();
+      const prodEl = productItem.renderItem();
       prodList.append(prodEl);
     }
-    renderHook.append(prodList);
+    return prodList;
   }
 }
 
-const productList = new ProductList();
-productList.render();
+class ShoppingCart {
+  items = [];
+  renderShopCart() {
+    const shoppingItems = document.createElement("section");
+    shoppingItems.innerHTML = `
+      <h2>total: \$ ${0}</h2>
+      <button>order now!</button>
+    `;
+    shoppingItems.className = "cart";
+    return shoppingItems;
+  }
+}
+
+class Shop {
+  renderShop() {
+    const renderHook = document.getElementById("app");
+
+    const shop = new ShoppingCart();
+    const cartEl = shop.renderShopCart();
+    const productList = new ProductList();
+    const prodListEl = productList.render();
+
+    renderHook.append(cartEl);
+    renderHook.append(prodListEl);
+  }
+}
+
+const shop = new Shop();
+shop.renderShop();
