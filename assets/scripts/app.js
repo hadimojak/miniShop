@@ -1,14 +1,34 @@
 class Product {
-  title = "DEFAULT";
-  imageUrl = "images/noImage.jpeg";
-  price = "";
-  description = "";
+  // title = 'DEFAULT';
+  // imageUrl;
+  // description;
+  // price;
 
-  constructor(title, image, price, desc) {
+  constructor(title, image, desc, price) {
     this.title = title;
     this.imageUrl = image;
-    this.price = price;
     this.description = desc;
+    this.price = price;
+  }
+}
+
+class ShoppingCart {
+  items = [];
+
+  addProduct(product) {
+    this.items.push(product);
+    this.totalOutput.innerHTML = `<h2>Total: \$${1}</h2>`;
+  }
+
+  render() {
+    const cartEl = document.createElement('section');
+    cartEl.innerHTML = `
+      <h2>Total: \$${0}</h2>
+      <button>Order Now!</button>
+    `;
+    cartEl.className = 'cart';
+    this.totalOutput = cartEl.querySelector('h2');
+    return cartEl;
   }
 }
 
@@ -17,68 +37,67 @@ class ProductItem {
     this.product = product;
   }
 
-  addCartHandler() {
-    console.log("adding product");
-    console.log(this.product);
+  addToCart() {
+    App.addProductToCart(this.product);
   }
 
-  renderItem() {
-    const prodEl = document.createElement("li");
-    prodEl.className = "product-item";
+  render() {
+    const prodEl = document.createElement('li');
+    prodEl.className = 'product-item';
     prodEl.innerHTML = `
         <div>
-            <img src='${this.product.imageUrl}' alt='${this.product.title}'> 
-            <div class='product-item__content'>
-                <h2>${this.product.title}</h2>
-                <h3>\$${this.product.price}</h3>
-                <p>${this.product.description}</p>
-                <button>Add to shopping cart</button>
-            </div>
-        </div>`;
-    const addCartButton = prodEl.querySelector("button");
-    addCartButton.addEventListener("click", this.addCartHandler.bind(this));
+          <img src="${this.product.imageUrl}" alt="${this.product.title}" >
+          <div class="product-item__content">
+            <h2>${this.product.title}</h2>
+            <h3>\$${this.product.price}</h3>
+            <p>${this.product.description}</p>
+            <button>Add to Cart</button>
+          </div>
+        </div>
+      `;
+    const addCartButton = prodEl.querySelector('button');
+    addCartButton.addEventListener('click', this.addToCart.bind(this));
     return prodEl;
   }
 }
 
 class ProductList {
   products = [
-    new Product("a pillow", "/images/pillow.jpeg", 300, "a soft pillow"), //create object with class
-    new Product("a car", "/images/car.jpeg", 3500, "a nice car"),
-    new Product("a carpet", "/images/carpet.jpeg", 605, "a clean carpet"),
+    new Product(
+      'A Pillow',
+      'https://en.wikipedia.org/wiki/Pillow#/media/File:Average_White_Pillow.jpg',
+      'A soft pillow!',
+      19.99
+    ),
+    new Product(
+      'A Carpet',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Ardabil_Carpet.jpg/397px-Ardabil_Carpet.jpg',
+      'A carpet which you might like - or not.',
+      89.99
+    )
   ];
+
   constructor() {}
+
   render() {
-    const prodList = document.createElement("ul");
-    prodList.className = "product-list";
+    const prodList = document.createElement('ul');
+    prodList.className = 'product-list';
     for (const prod of this.products) {
       const productItem = new ProductItem(prod);
-      const prodEl = productItem.renderItem();
+      const prodEl = productItem.render();
       prodList.append(prodEl);
     }
     return prodList;
   }
 }
 
-class ShoppingCart {
-  items = [];
-  renderShopCart() {
-    const shoppingItems = document.createElement("section");
-    shoppingItems.innerHTML = `
-      <h2>total: \$ ${0}</h2>
-      <button>order now!</button>
-    `;
-    shoppingItems.className = "cart";
-    return shoppingItems;
-  }
-}
-
 class Shop {
-  renderShop() {
-    const renderHook = document.getElementById("app");
+  
+  render() {
+    const renderHook = document.getElementById('app');
 
-    const shop = new ShoppingCart();
-    const cartEl = shop.renderShopCart();
+    this.cart = new ShoppingCart();
+    const cartEl = this.cart.render();
     const productList = new ProductList();
     const prodListEl = productList.render();
 
@@ -87,5 +106,22 @@ class Shop {
   }
 }
 
-const shop = new Shop();
-shop.renderShop();
+class App {
+  static cart;
+
+  static init() {
+    const shop = new Shop();
+    shop.render();
+    this.cart = shop.cart;
+  }
+
+  static addProductToCart(product) {
+    this.cart.addProduct(product);
+  }
+}
+
+App.init();
+
+
+
+
